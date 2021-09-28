@@ -9,7 +9,7 @@ const bootcamps = require("./routes/bootcamps.js");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
-//router/routes
+//router routes
 app.use("/", bootcamps);
 
 const port = process.env.PORT || 5000;

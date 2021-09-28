@@ -1,8 +1,24 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("ggez");
-});
+//importing from bootcamps controllers
+const {
+  getBootCamps,
+  createBootcamp,
+  deleteBootCamp,
+  updateBootCamp,
+  getBootCamp,
+} = require("../controllers/bootcamps");
+
+// root routed
+router.route("/").get(getBootCamps).post(createBootcamp);
+
+///routes with :id
+
+router
+  .route("/:id")
+  .get(getBootCamp)
+  .put(updateBootCamp)
+  .delete(deleteBootCamp);
 
 module.exports = router;
