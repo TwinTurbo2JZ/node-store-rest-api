@@ -5,6 +5,7 @@ exports.getBootCamps = (req, res, next) => {
   });
 };
 
+//public
 exports.createBootcamp = (req, res, next) => {
   res.status(200).json({
     status: "successful",
@@ -12,6 +13,7 @@ exports.createBootcamp = (req, res, next) => {
   });
 };
 
+//
 exports.getBootCamp = (req, res, next) => {
   res.status(200).json({
     status: "success",
