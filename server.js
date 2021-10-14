@@ -4,6 +4,9 @@ const mongoose = require("mongoose");
 
 const app = express();
 
+//body parser
+app.use(express.json());
+
 //importing routes
 const bootcamps = require("./routes/bootcamps.js");
 

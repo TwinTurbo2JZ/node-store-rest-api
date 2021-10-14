@@ -41,11 +41,11 @@ const BootcampSchema = new mongoose.Schema({
     type: {
       type: String,
       enum: ["Point"],
-      required: true,
+      required: false,
     },
     coordinates: {
       type: [Number],
-      required: true,
+      required: false,
     },
   },
   formattedAddress: String,
@@ -101,4 +101,4 @@ const BootcampSchema = new mongoose.Schema({
   },
 });
 
-modules.exports = mongoose.model("Bootcamp", BootcampSchema);
+module.exports = mongoose.model("Bootcamp", BootcampSchema);
