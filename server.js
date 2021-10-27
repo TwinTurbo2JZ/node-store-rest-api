@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const errorHandler = require("./middleware/errorhandler/error");
 
 const app = express();
 
@@ -9,18 +10,38 @@ app.use(express.json());
 
 //importing routes
 const bootcamps = require("./routes/bootcamps.js");
+//importing auth
+const auth = require("./routes/auth.js");
 
 //dotenv
 const dotenv = require("dotenv");
+const errorHanlder = require("./middleware/errorhandler/error");
+const ErrorResponse = require("./middleware/errorhandler/ErrorResponse");
 dotenv.config({ path: "./config.env" });
 
-//mmorgan
+//morgan
 if (process.env.NODE_ENV === "developement") {
   app.use(morgan("dev"));
 }
 
 //router routes
 app.use("/", bootcamps);
+app.use("/", auth);
+
+// //path not found
+
+app.all("*", (req, res) => {
+  const err = new Error(`Url ${req.path} not found`);
+
+  res.status(404).json({
+    status: "unsuccessful",
+    message: err.message,
+    stack: err.stack,
+  });
+});
+
+//error handler middleware
+app.use(errorHanlder);
 
 //PORTS
 

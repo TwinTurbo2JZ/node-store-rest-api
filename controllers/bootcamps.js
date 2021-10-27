@@ -1,5 +1,7 @@
 //importing the schema
 const Bootcamp = require("../models/Bootcamp");
+//importing the custom error handler class
+const ErrorResponse = require("../middleware/errorhandler/ErrorResponse");
 
 exports.getBootCamps = async (req, res, next) => {
   try {
@@ -45,23 +47,24 @@ exports.createBootcamp = async (req, res, next) => {
 //
 exports.getBootCamp = async (req, res, next) => {
   try {
-    const bootcamp = await Bootcamp.findById(req.params.id);
+    console.log(req.query, "reeeeeeeeeeeeee");
+
+    const bootcamp = await Bootcamp.findById(req.query);
     if (!bootcamp) {
-      return res.status(400).json({
-        status: "unsuccessful",
-        message: "Product not found",
-      });
+      return next(
+        new ErrorResponse(`Product not found with id of ${req.params.id}`, 404)
+      );
     }
 
     res.status(200).json({
       status: "successful",
       bootcamp: bootcamp,
     });
-  } catch (error) {
-    res.status(400).json({
-      status: "unsuccessful",
-      message: error.message,
-    });
+  } catch (err) {
+    // next( new ErrorResponse(`Product not found with id of ${req.params.id}`, 404))
+    next(err);
+
+    console.log(err.stack);
   }
 };
 
