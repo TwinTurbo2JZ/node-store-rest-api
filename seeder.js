@@ -1,7 +1,4 @@
-const fs = require("fs");
 const dotenv = require("dotenv");
-const { fileURLToPath } = require("url");
-const { dirname } = require("path");
 const mongoose = require("mongoose");
 const process = require("process");
 
@@ -50,14 +47,6 @@ const deleteData = async () => {
 };
 
 //running the seeder functions
-
-// if (process.argv[2] === "-i") {
-//   console.log("i");
-//   importData();
-// } else if (process.argv[2] === "-d") {
-//   console.log("gg");
-//   deleteData();
-// }
 
 switch (process.argv[2]) {
   case "-d": {

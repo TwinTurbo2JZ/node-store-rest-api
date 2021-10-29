@@ -11,7 +11,7 @@ const {
 } = require("../controllers/bootcamps");
 
 // root routed
-router.route("/").get(getBootCamps).post(createBootcamp);
+router.route("/api").get(getBootCamps).post(createBootcamp);
 
 ///routes with :id
 

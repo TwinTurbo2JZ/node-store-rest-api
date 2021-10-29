@@ -5,21 +5,58 @@ const ErrorResponse = require("../middleware/errorhandler/ErrorResponse");
 
 exports.getBootCamps = async (req, res, next) => {
   try {
-    const bootcamps = await Bootcamp.find();
+    let queryString = JSON.stringify(req.query);
 
-    if (!bootcamps) {
-      return res.status(400).json({
-        status: unsucessful,
-      });
-    }
+    queryString = queryString.replace(
+      /\b(gt|gte|lte|ls|in)\b/g,
+      (match) => `$${match}`
+    );
+
+    let endQueryString = JSON.parse(queryString);
+
+    const bootcamps = await Bootcamp.find(endQueryString);
+
     res.status(200).json({
-      success: "true",
+      status: "successful",
       count: bootcamps.length,
-      bootcamps: bootcamps,
+      data: bootcamps,
     });
+
+    // if (queryString) {
+    //   await Bootcamp.find(JSON.parse(queryString), (err, data) => {
+    //     if (err) {
+    //       console.log(err);
+    //     }
+
+    //     if (data) {
+    //       console.log(data, "reeee");
+    //       return res.status(200).json({
+    //         success: "true",
+    //         count: data.length,
+    //         bootcamps: data,
+    //       });
+    //     }
+    //   });
+    // }
+
+    // if (!queryString) {
+    //   var bootcamps = await Bootcamp.find();
+
+    //   return res.status(200).json({
+    //     success: "true",
+    //     count: bootcamps.length,
+    //     bootcamps: bootcamps,
+    //   });
+    // }
+
+    // if (!bootcamps) {
+    //   return res.status(400).json({
+    //     status: "unsucessful",
+    //   });
+    // }
   } catch (error) {
     res.status(400).json({
-      status: unsucessful,
+      status: "unsucessful",
       message: error.message,
     });
   }
@@ -47,8 +84,6 @@ exports.createBootcamp = async (req, res, next) => {
 //
 exports.getBootCamp = async (req, res, next) => {
   try {
-    console.log(req.query, "reeeeeeeeeeeeee");
-
     const bootcamp = await Bootcamp.findById(req.query);
     if (!bootcamp) {
       return next(
