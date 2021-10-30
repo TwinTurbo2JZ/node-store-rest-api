@@ -5,16 +5,36 @@ const ErrorResponse = require("../middleware/errorhandler/ErrorResponse");
 
 exports.getBootCamps = async (req, res, next) => {
   try {
-    let queryString = JSON.stringify(req.query);
+    //cpoying the query without mutating
+    let reqQuery = { ...req.query };
 
+    //making querystring
+    let queryString = JSON.stringify(reqQuery);
+
+    //regex for price type check, refers mongoose for more details
     queryString = queryString.replace(
       /\b(gt|gte|lte|ls|in)\b/g,
       (match) => `$${match}`
     );
 
+    //what to remove from qurystring
+    const removeFileds = ["select"];
+    //removing the above
+    removeFileds.forEach((params) => delete reqQuery[params]);
+    // console.log(reqQuery);
+
+    //modifying the apove to show certain information in the object
+
+    if (req.query.select) {
+      var field = req.query.select.split(",").join(" ");
+    }
+
+    //parsing as JSON
     let endQueryString = JSON.parse(queryString);
 
-    const bootcamps = await Bootcamp.find(endQueryString);
+    const bootcamps = await Bootcamp.find(endQueryString, field);
+
+    //we can also do .select(field) for the same results, but the above is in the docs and it works
 
     res.status(200).json({
       status: "successful",
@@ -22,38 +42,11 @@ exports.getBootCamps = async (req, res, next) => {
       data: bootcamps,
     });
 
-    // if (queryString) {
-    //   await Bootcamp.find(JSON.parse(queryString), (err, data) => {
-    //     if (err) {
-    //       console.log(err);
-    //     }
-
-    //     if (data) {
-    //       console.log(data, "reeee");
-    //       return res.status(200).json({
-    //         success: "true",
-    //         count: data.length,
-    //         bootcamps: data,
-    //       });
-    //     }
-    //   });
-    // }
-
-    // if (!queryString) {
-    //   var bootcamps = await Bootcamp.find();
-
-    //   return res.status(200).json({
-    //     success: "true",
-    //     count: bootcamps.length,
-    //     bootcamps: bootcamps,
-    //   });
-    // }
-
-    // if (!bootcamps) {
-    //   return res.status(400).json({
-    //     status: "unsucessful",
-    //   });
-    // }
+    if (!bootcamps) {
+      return res.status(400).json({
+        status: "unsucessful",
+      });
+    }
   } catch (error) {
     res.status(400).json({
       status: "unsucessful",
