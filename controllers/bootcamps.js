@@ -18,21 +18,28 @@ exports.getBootCamps = async (req, res, next) => {
     );
 
     //what to remove from qurystring
-    const removeFileds = ["select"];
+    const removeFileds = ["select", "sort"];
     //removing the above
     removeFileds.forEach((params) => delete reqQuery[params]);
     // console.log(reqQuery);
 
-    //modifying the apove to show certain information in the object
+    //modifying the above to show certain information in the object
 
     if (req.query.select) {
       var field = req.query.select.split(",").join(" ");
     }
 
+    //sorting
+    if (req.query.sort) {
+      var sortBy = req.query.sort.split(",").join(" ");
+    } else {
+      sortBy = "-createdAt";
+    }
+
     //parsing as JSON
     let endQueryString = JSON.parse(queryString);
 
-    const bootcamps = await Bootcamp.find(endQueryString, field);
+    const bootcamps = await Bootcamp.find(endQueryString, field).sort(sortBy);
 
     //we can also do .select(field) for the same results, but the above is in the docs and it works
 
