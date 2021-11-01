@@ -18,7 +18,7 @@ exports.getBootCamps = async (req, res, next) => {
     );
 
     //what to remove from qurystring
-    const removeFileds = ["select", "sort"];
+    const removeFileds = ["select", "sort", "page", "limit", "skip"];
     //removing the above
     removeFileds.forEach((params) => delete reqQuery[params]);
     // console.log(reqQuery);
@@ -36,10 +36,20 @@ exports.getBootCamps = async (req, res, next) => {
       sortBy = "-createdAt";
     }
 
+    //pagination
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parseInt(req.query.page, 10) || 1;
+    const skip = (page - 1) * limit;
+
+    //pagination- page number; next and previous page
+
     //parsing as JSON
     let endQueryString = JSON.parse(queryString);
 
-    const bootcamps = await Bootcamp.find(endQueryString, field).sort(sortBy);
+    const bootcamps = await Bootcamp.find(endQueryString, field)
+      .sort(sortBy)
+      .skip(skip)
+      .limit(limit);
 
     //we can also do .select(field) for the same results, but the above is in the docs and it works
 
