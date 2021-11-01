@@ -7,7 +7,7 @@ const Bootcamp = require("./models/Bootcamp");
 dotenv.config({ path: "./config.env" });
 
 //saving the json data in a var
-const bootcamps = require("../node-store-api/_data/bootcamps.json");
+const bootcamps = require("./_data/bootcamps.json");
 
 //connecting to the Database
 
