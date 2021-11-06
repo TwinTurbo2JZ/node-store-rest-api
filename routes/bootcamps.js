@@ -1,4 +1,6 @@
 const express = require("express");
+//including the courses router
+const courseRouter = require("./courses");
 const router = express.Router();
 
 //importing from bootcamps controllers
@@ -10,8 +12,11 @@ const {
   getBootCamp,
 } = require("../controllers/bootcamps");
 
+//Re-route into other routers
+router.use("/:bootcampID/courses", courseRouter);
+
 // root routed
-router.route("/api").get(getBootCamps).post(createBootcamp);
+router.route("/").get(getBootCamps).post(createBootcamp);
 
 ///routes with :id
 

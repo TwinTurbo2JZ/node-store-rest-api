@@ -18,7 +18,14 @@ exports.getBootCamps = async (req, res, next) => {
     );
 
     //what to remove from qurystring
-    const removeFileds = ["select", "sort", "page", "limit", "skip"];
+    const removeFileds = [
+      "select",
+      "sort",
+      "page",
+      "limit",
+      "startPage",
+      "skip",
+    ];
     //removing the above
     removeFileds.forEach((params) => delete reqQuery[params]);
     // console.log(reqQuery);
@@ -39,23 +46,44 @@ exports.getBootCamps = async (req, res, next) => {
     //pagination
     const limit = parseInt(req.query.limit, 10) || 10;
     const page = parseInt(req.query.page, 10) || 1;
-    const skip = (page - 1) * limit;
+    const startPage = (page - 1) * limit;
+    const endPage = page * limit;
+    const total = await Bootcamp.countDocuments();
 
     //pagination- page number; next and previous page
+
+    const pagination = {};
+
+    if (endPage < total) {
+      pagination.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startPage > 0) {
+      pagination.prev = {
+        page: page - 1,
+        limit,
+      };
+    }
 
     //parsing as JSON
     let endQueryString = JSON.parse(queryString);
 
     const bootcamps = await Bootcamp.find(endQueryString, field)
       .sort(sortBy)
-      .skip(skip)
+      .skip(startPage)
       .limit(limit);
+
+    console.log("fix the pagination bug");
 
     //we can also do .select(field) for the same results, but the above is in the docs and it works
 
     res.status(200).json({
       status: "successful",
       count: bootcamps.length,
+      pagination,
       data: bootcamps,
     });
 

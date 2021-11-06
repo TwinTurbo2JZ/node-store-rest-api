@@ -10,6 +10,7 @@ app.use(express.json());
 
 //importing routes
 const bootcamps = require("./routes/bootcamps.js");
+const courses = require("./routes/courses");
 //importing auth
 const auth = require("./routes/auth.js");
 
@@ -25,7 +26,8 @@ if (process.env.NODE_ENV === "developement") {
 }
 
 //router routes
-app.use("/", bootcamps);
+app.use("/api/bootcamps", bootcamps);
+app.use("/api/courses", courses);
 app.use("/", auth);
 
 // //path not found
