@@ -1,8 +1,6 @@
 const Course = require("../models/Course");
 
 const ErrorResponse = require("../middleware/errorhandler/ErrorResponse");
-const e = require("express");
-const { query } = require("express");
 
 exports.getCourses = async (req, res, next) => {
   try {
@@ -11,7 +9,10 @@ exports.getCourses = async (req, res, next) => {
     if (req.params.bootcampID) {
       query = Course.find({ bootcamp: req.params.bootcampID });
     } else {
-      query = Course.find();
+      query = Course.find().populate({
+        path: "bootcamp",
+        select: "name description",
+      });
     }
 
     let courseData = await query;

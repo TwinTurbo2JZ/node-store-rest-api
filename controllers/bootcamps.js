@@ -2,6 +2,7 @@
 const Bootcamp = require("../models/Bootcamp");
 //importing the custom error handler class
 const ErrorResponse = require("../middleware/errorhandler/ErrorResponse");
+const { query } = require("express");
 
 exports.getBootCamps = async (req, res, next) => {
   try {
@@ -38,7 +39,7 @@ exports.getBootCamps = async (req, res, next) => {
 
     //sorting
     if (req.query.sort) {
-      var sortBy = req.query.sort.split(",").join(" ");
+      const sortBy = req.query.sort.split(",").join(" ");
     } else {
       sortBy = "-createdAt";
     }
@@ -74,8 +75,8 @@ exports.getBootCamps = async (req, res, next) => {
     const bootcamps = await Bootcamp.find(endQueryString, field)
       .sort(sortBy)
       .skip(startPage)
-      .limit(limit);
-
+      .limit(limit)
+      .populate({ path: "courses", select: "title weeks tuition" });
     console.log("fix the pagination bug");
 
     //we can also do .select(field) for the same results, but the above is in the docs and it works
