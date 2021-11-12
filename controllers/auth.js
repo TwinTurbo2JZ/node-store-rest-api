@@ -1,7 +1,21 @@
 const User = require("../models/User");
 
-exports.auth = (req, res, next) => {
-  res.status(200).json({
-    status: "Successful",
-  });
+//api/auth/register
+exports.register = (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+    const user = User.create({
+      name,
+      password,
+      email,
+      role,
+    });
+
+    res.status(200).json({
+      status: "Successful",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

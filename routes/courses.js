@@ -2,9 +2,16 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 
 //importing from bootcamps controllers
-const { getCourses } = require("../controllers/courses");
+const {
+  getCourses,
+  getCourse,
+  addCourse,
+  updateCourse,
+  deleteCourse,
+} = require("../controllers/courses");
 
 // root routed
-router.route("/").get(getCourses);
+router.route("/").get(getCourses).post(addCourse);
+router.route("/:id").get(getCourse).put(updateCourse).delete(deleteCourse);
 
 module.exports = router;

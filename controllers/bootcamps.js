@@ -123,7 +123,7 @@ exports.createBootcamp = async (req, res, next) => {
 //
 exports.getBootCamp = async (req, res, next) => {
   try {
-    const bootcamp = await Bootcamp.findById(req.query);
+    const bootcamp = await Bootcamp.findById(req.params.id);
     if (!bootcamp) {
       return next(
         new ErrorResponse(`Product not found with id of ${req.params.id}`, 404)
@@ -135,8 +135,10 @@ exports.getBootCamp = async (req, res, next) => {
       bootcamp: bootcamp,
     });
   } catch (err) {
-    // next( new ErrorResponse(`Product not found with id of ${req.params.id}`, 404))
-    next(err);
+    next(
+      new ErrorResponse(`Product not found with id of ${req.params.id}`, 404)
+    );
+    // next(err);
 
     console.log(err.stack);
   }
