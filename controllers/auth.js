@@ -19,10 +19,14 @@ exports.register = async (req, res, next) => {
       role,
     });
 
-    //req,body works too
+    //req.body works too
+
+    //generate auth token
+    const token = user.getSignedToken();
 
     res.status(200).json({
       status: "Successful",
+      token,
     });
   } catch (error) {
     next(error);
