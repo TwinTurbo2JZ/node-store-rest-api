@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "developement") {
 //router routes
 app.use("/api/bootcamps", bootcamps);
 app.use("/api/courses", courses);
-app.use("/", auth);
+app.use("/api", auth);
 
 // //path not found
 

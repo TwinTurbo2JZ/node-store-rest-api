@@ -1,19 +1,28 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 //api/auth/register
-exports.register = (req, res, next) => {
+exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
-    const user = User.create({
+    let { name, email, password, role } = req.body;
+
+    const salt = await bcrypt.genSalt(10);
+    password = await bcrypt.hash(req.body.password, salt);
+    //or we can do req.body.password instead of the wbpve and use req.body in
+    //User.create
+    //can do it models as well with Schema.pre
+
+    const user = await User.create({
       name,
-      password,
       email,
+      password,
       role,
     });
 
+    //req,body works too
+
     res.status(200).json({
       status: "Successful",
-      data: user,
     });
   } catch (error) {
     next(error);
