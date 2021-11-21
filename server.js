@@ -3,10 +3,17 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const errorHandler = require("./middleware/errorhandler/error");
 
+//cookie parser
+const cookieParser = require("cookie-parser");
+
 const app = express();
+
+//middlewares
 
 //body parser
 app.use(express.json());
+//cookie parser
+app.use(cookieParser());
 
 //importing routes
 const bootcamps = require("./routes/bootcamps.js");

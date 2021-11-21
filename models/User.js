@@ -42,7 +42,7 @@ const UserSchema = mongoose.Schema({
 //   next();
 // });
 
-//genetate token
+//genetate token //can be put in the controller
 UserSchema.methods.getSignedToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SUPER_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
