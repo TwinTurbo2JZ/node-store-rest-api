@@ -3,6 +3,9 @@ const express = require("express");
 const courseRouter = require("./courses");
 const router = express.Router();
 
+//importing protect middleware
+const { protect } = require("../middleware/auth");
+
 //importing from bootcamps controllers
 const {
   getBootCamps,
@@ -16,14 +19,14 @@ const {
 router.use("/:bootcampID/courses", courseRouter);
 
 // root routed
-router.route("/").get(getBootCamps).post(createBootcamp);
+router.route("/").get(getBootCamps).post(protect, createBootcamp);
 
 ///routes with :id
 
 router
   .route("/:id")
   .get(getBootCamp)
-  .put(updateBootCamp)
-  .delete(deleteBootCamp);
+  .put(protect, updateBootCamp)
+  .delete(protect, deleteBootCamp);
 
 module.exports = router;

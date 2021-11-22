@@ -12,6 +12,7 @@ const app = express();
 
 //body parser
 app.use(express.json());
+
 //cookie parser
 app.use(cookieParser());
 
@@ -20,6 +21,7 @@ const bootcamps = require("./routes/bootcamps.js");
 const courses = require("./routes/courses");
 //importing auth
 const auth = require("./routes/auth.js");
+// console.log(`server line 23 40`);
 
 //dotenv
 const dotenv = require("dotenv");
