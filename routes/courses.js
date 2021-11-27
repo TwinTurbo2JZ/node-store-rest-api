@@ -11,10 +11,17 @@ const {
 } = require("../controllers/courses");
 
 //importing protect middleware
-const { protect } = require("../middleware/auth");
+const { protect, authorization } = require("../middleware/auth");
 
 // root routed
-router.route("/").get(getCourses).post(addCourse);
-router.route("/:id").get(getCourse).put(updateCourse).delete(deleteCourse);
+router
+  .route("/")
+  .get(getCourses)
+  .post(protect, authorization("admin", "publisher"), addCourse);
+router
+  .route("/:id")
+  .get(getCourse)
+  .put(protect, authorization("admin", "publisher"), updateCourse)
+  .delete(protect, authorization("admin", "publisher"), deleteCourse);
 
 module.exports = router;
