@@ -61,15 +61,17 @@ exports.login = async (req, res, next) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      return next(new ErrorResponse("Invalid Credentials", 401));
+      return next(new ErrorResponse("Invalid Credentials, user", 401));
     }
 
     //check password
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(req.body.password, user.password);
+
+    console.log(req.body.password, user, isMatch);
 
     if (!isMatch) {
-      return next(new ErrorResponse("Invalid Credentials", 401));
+      return next(new ErrorResponse("Invalid Credentials, no match", 401));
     }
 
     // sendTokenResponse(user, 200, res);
