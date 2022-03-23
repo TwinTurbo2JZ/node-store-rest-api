@@ -19,6 +19,7 @@ app.use(cookieParser());
 //importing routes
 const bootcamps = require("./routes/bootcamps.js");
 const courses = require("./routes/courses");
+const jobs = require("./routes/jobs.js");
 //importing auth
 const auth = require("./routes/auth.js");
 // console.log(`server line 23 40`);
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV === "developement") {
 app.use("/api/bootcamps", bootcamps);
 app.use("/api/courses", courses);
 app.use("/api", auth);
+app.use("/jobs", jobs);
 
 // //path not found
 

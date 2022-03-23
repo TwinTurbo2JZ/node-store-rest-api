@@ -68,7 +68,7 @@ exports.login = async (req, res, next) => {
 
     const isMatch = await bcrypt.compare(req.body.password, user.password);
 
-    console.log(req.body.password, user, isMatch);
+    // console.log(req.body.password, user, isMatch);
 
     if (!isMatch) {
       return next(new ErrorResponse("Invalid Credentials, no match", 401));
@@ -90,6 +90,25 @@ exports.login = async (req, res, next) => {
     });
   } catch (error) {
     return next(new ErrorResponse("Not authorized to access this path", 401));
+  }
+};
+
+//get logged in user
+//private
+
+exports.getMe = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    // console.log(req.user, "11");
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return next(
+      new ErrorResponse(" get me Not authorized to access this path", 401)
+    );
   }
 };
 

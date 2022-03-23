@@ -58,6 +58,8 @@ exports.getCourse = async (req, res, next) => {
 exports.addCourse = async (req, res, next) => {
   try {
     req.body.bootcamp = req.params.bootcampID;
+    req.body.user = req.user.id;
+    console.log(req);
 
     const bootcamps = await Bootcamp.findById(req.params.bootcampID);
     if (!bootcamps) {
@@ -65,6 +67,16 @@ exports.addCourse = async (req, res, next) => {
         new ErrorResponse(
           `No bootcamp with the id ${req.params.bootcampID}`,
           404
+        )
+      );
+    }
+
+    //Make sure User owns the bootcamp
+    if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+      return next(
+        new ErrorResponse(
+          `this user did not make the course ${bootcamp._id}`,
+          401
         )
       );
     }

@@ -104,7 +104,11 @@ exports.getBootCamps = async (req, res, next) => {
 //public
 exports.createBootcamp = async (req, res, next) => {
   try {
+    //add user to req.body
+    req.body.user = req.user;
     const bootcamp = await Bootcamp.create(req.body);
+    // console.log(req, "1");
+    //share the req object cause they are part of the same controller
 
     res.status(201).json({
       status: "successful",
@@ -146,10 +150,7 @@ exports.getBootCamp = async (req, res, next) => {
 
 exports.updateBootCamp = async (req, res, next) => {
   try {
-    const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    let bootcamp = await Bootcamp.findById(req.params.id);
 
     if (!bootcamp) {
       return res.status(400).json({
@@ -157,6 +158,17 @@ exports.updateBootCamp = async (req, res, next) => {
         data: "Products not found",
       });
     }
+    // console.log(req.user, bootcamp.user, `in bootcamp controller`);
+    //Make sure User owns the bootcamp
+    if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+      return next(new ErrorResponse(`this user did not make the bc`, 401));
+    }
+
+    //updates here
+    bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       status: "success",
